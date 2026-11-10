@@ -1,0 +1,54 @@
+/* Main Header Container */
+
+.main-header {
+  width: 100%;
+  min-height: 85px;
+  background-color: #0b1220;
+  border-bottom: 1px solid #263449;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 15px 30px;
+  box-sizing:border-box;
+
+  color: #F8FAFC;
+  font-family: Arial, sans-serif;
+    
+}
+
+/* Left branding section */
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+ }
+
+ .brand-icon {
+    width: 46px;
+    height: 46px;
+    background-color: #2563EB;
+    border-radius: 10px;
+
+    display: flex;
+    align-items:center;
+    justify-content: center;
+
+    color: white;
+}
+
+/* Application Title */
+.brand-info h1{
+    font-size: 21px;
+    margin: 0;
+    font-weight: 600;
+    color: #F8FAFC;
+
+}
+
+.brand-info p{
+    font-size: 12px;
+    color: #94A3B8;
+    margin: 5px 0 0;
+}
