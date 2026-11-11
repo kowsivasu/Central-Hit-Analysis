@@ -259,3 +259,79 @@
     color: #94A3B8;
     font-size: 12px;
 }
+
+
+/* Date-wise and Time-wise filtering section */
+
+.dashboard-filters {
+    background-color: #172033;
+    border: 1px solid #263449;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 25px;
+}
+
+.dashboard-filters h3 {
+    color: #F8FAFC;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.filter-fields {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-group label {
+    color: #CBD5E1;
+    font-size: 13px;
+}
+
+.filter-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    background-color: #0B1220;
+    color: #F8FAFC;
+    border: 1px solid #263449;
+    border-radius: 6px;
+}
+
+.filter-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.filter-buttons button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #2563EB;
+    color: white;
+}
+
+.filter-buttons button:last-child {
+    background-color: #475569;
+}
+
+@media (max-width: 900px) {
+    .filter-fields {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 500px) {
+    .filter-fields {
+        grid-template-columns: 1fr;
+    }
+}
