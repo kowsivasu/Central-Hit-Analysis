@@ -16,14 +16,14 @@ import { useState } from 'react';
 import DashboardFilters from '../components/DashboardFilters';
 
 const hitData = [
-    { name: 'Monday', hits: 120 },
-    { name: 'Tuesday', hits: 180 },
-    { name: 'Wednesday', hits: 150 },
-    { name: 'Thursday', hits: 250 },
-    { name: 'Friday', hits: 300 },
-    { name: 'Saturday', hits: 220 },
-    { name: 'Sunday', hits: 350 }
-]
+    { name: 'Monday', hits: 120, dateTime: '2026-11-09T10:00:00' },
+    { name: 'Tuesday', hits: 180, dateTime: '2026-11-10T10:00:00' },
+    { name: 'Wednesday', hits: 150, dateTime: '2026-11-11T10:00:00' },
+    { name: 'Thursday', hits: 250, dateTime: '2026-11-12T10:00:00' },
+    { name: 'Friday', hits: 300, dateTime: '2026-11-13T10:00:00' },
+    { name: 'Saturday', hits: 220, dateTime: '2026-11-14T10:00:00' },
+    { name: 'Sunday', hits: 350, dateTime: '2026-11-15T10:00:00' }
+];
 
 const serverData = [
     {
@@ -31,21 +31,24 @@ const serverData = [
         server: 'Web Server 01',
         ip: '192.168.1.10',
         status: 'Active',
-        hits: 5420
+        hits: 5420,
+        dateTime: '2026-11-11T10:30:00'
     },
     {
         id: 2,
         server: 'Web Server 02',
         ip: '192.168.1.11',
         status: 'Active',
-        hits: 4230
+        hits: 4230,
+        dateTime: '2026-11-11T10:25:00'
     },
     {
         id: 3,
         server: 'Web Server 03',
         ip: '192.168.1.13',
         status: 'Inactive',
-        hits: 1200
+        hits: 1200,
+        dateTime: '2026-11-11T10:15:00'
     }
 ];
 
@@ -94,7 +97,32 @@ const activityData = [
     }
 ];
 
-
+const alertsData = [
+    {
+        id: 1,
+        title: 'Multiple Failed Login Attempts',
+        message: 'Repeated failed login attempts detected.',
+        severity: 'critical',
+        time: '10:30 AM',
+        dateTime: '2026-11-11T10:30:00'
+    },
+    {
+        id: 2,
+        title: 'Unusual Network Traffic',
+        message: 'Abnormal network traffic detected.',
+        severity: 'high',
+        time: '10:20 AM',
+        dateTime: '2026-11-11T10:20:00'
+    },
+    {
+        id: 3,
+        title: 'High CPU Utilization',
+        message: 'Server CPU utilization is above the threshold.',
+        severity: 'medium',
+        time: '10:15 AM',
+        dateTime: '2026-11-11T10:15:00'
+    }
+];
 
 function Dashboard() {
 
@@ -133,7 +161,7 @@ const handleResetFilter = () => {
     setAppliedFilter(null);
 };
 
-
+/* Recent Activity section */
 const filteredActivityData = activityData.filter((activity) => {
 
     if (!appliedFilter) {
@@ -147,6 +175,51 @@ const filteredActivityData = activityData.filter((activity) => {
         activityDate <= appliedFilter.end
     );
 });
+
+/* HitChart section */
+const filteredHitData = hitData.filter((item) => {
+
+    if (!appliedFilter) {
+        return true;
+    }
+
+    const hitDate = new Date(item.dateTime);
+
+    return (
+        hitDate >= appliedFilter.start &&
+        hitDate <= appliedFilter.end
+    );
+});
+
+/* ServerData section */
+const filteredServerData = serverData.filter((server) => {
+
+    if (!appliedFilter) {
+        return true;
+    }
+
+    const serverDate = new Date(server.dateTime);
+
+    return (
+        serverDate >= appliedFilter.start &&
+        serverDate <= appliedFilter.end
+    );
+});
+
+const filteredAlerts = alertsData.filter((alert) => {
+
+    if (!appliedFilter) {
+        return true;
+    }
+
+    const alertDate = new Date(alert.dateTime);
+
+    return (
+        alertDate >= appliedFilter.start &&
+        alertDate <= appliedFilter.end
+    );
+});
+
 
 
     return (
@@ -203,7 +276,7 @@ const filteredActivityData = activityData.filter((activity) => {
 
             <HitChart
                 title="Weekly Hit Analysis"
-                data={hitData}
+                data={filteredHitData}
                 dataKey="hits"
                 color="#38BDF8"
                 />
@@ -213,35 +286,28 @@ const filteredActivityData = activityData.filter((activity) => {
            <DataTable
            title="Server Activity"
            columns={serverColumns}
-           data={serverData}
+           data={filteredServerData}
             />
 
 <RecentActivity activities={filteredActivityData} />
            {/* Recent Security Alerts */}
 
 <div className="alerts-section">
+
     <h2>Recent Security Alerts</h2>
 
-    <AlertCard
-        title="Multiple Failed Login Attempts"
-        message="Repeated failed login attempts detected."
-        severity="critical"
-        time="10 minutes ago"
-    />
+    {filteredAlerts.map((alert) => (
 
-    <AlertCard
-        title="Unusual Network Traffic"
-        message="Abnormal network traffic detected."
-        severity="high"
-        time="20 minutes ago"
-    />
+        <AlertCard
+            key={alert.id}
+            title={alert.title}
+            message={alert.message}
+            severity={alert.severity}
+            time={alert.time}
+        />
 
-    <AlertCard
-        title="High CPU Utilization"
-        message="Server CPU utilization is above the threshold."
-        severity="medium"
-        time="30 minutes ago"
-    />
+    ))}
+
 </div>
 
 
