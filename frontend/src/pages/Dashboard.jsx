@@ -25,6 +25,20 @@ const hitData = [
     { name: 'Sunday', hits: 350, dateTime: '2026-11-15T10:00:00' }
 ];
 
+
+const summaryHitData = [
+    { id: 1, category: 'web', hits: 1200, dateTime: '2026-11-09T10:00:00' },
+    { id: 2, category: 'network', hits: 600, dateTime: '2026-11-10T11:00:00' },
+    { id: 3, category: 'application', hits: 400, dateTime: '2026-11-11T12:00:00' },
+    { id: 4, category: 'web', hits: 800, dateTime: '2026-11-12T10:30:00' },
+    { id: 5, category: 'network', hits: 300, dateTime: '2026-11-13T09:30:00' },
+    { id: 6, category: 'web', hits: 500, dateTime: '2026-11-14T14:00:00' },
+    { id: 7, category: 'application', hits: 200, dateTime: '2026-11-15T15:00:00' },
+    { id: 8, category: 'cybersecurity', hits: 300, dateTime: '2026-11-10T13:00:00' },
+    { id: 9, category: 'cybersecurity', hits: 200, dateTime: '2026-11-12T14:00:00' }
+];
+
+
 const serverData = [
     {
         id: 1,
@@ -206,6 +220,7 @@ const filteredServerData = serverData.filter((server) => {
     );
 });
 
+/* Alert Filter  section*/
 const filteredAlerts = alertsData.filter((alert) => {
 
     if (!appliedFilter) {
@@ -219,6 +234,51 @@ const filteredAlerts = alertsData.filter((alert) => {
         alertDate <= appliedFilter.end
     );
 });
+
+
+
+
+// Filter summary data using the selected date and time
+const filteredSummaryHitData = summaryHitData.filter((item) => { /* filter() is the js method to select records that satisfy a condition. and item represents one record from the array. */
+     console.log("item");
+    console.log(item);
+  
+    if (!appliedFilter) return true;
+
+    const hitDate = new Date(item.dateTime);
+
+    return (
+        hitDate >= appliedFilter.start &&
+        hitDate <= appliedFilter.end
+    );
+});
+
+// Calculate Total Hits
+const totalHits = filteredSummaryHitData.reduce(
+    (total, item) => total + item.hits,
+    0
+);
+
+// Calculate Web Server Hits
+const webServerHits = filteredSummaryHitData
+    .filter((item) => item.category === 'web')
+    .reduce((total, item) => total + item.hits, 0);
+
+// Calculate Cybersecurity Hits
+const cybersecurityHits = filteredSummaryHitData
+    .filter((item) => item.category === 'cybersecurity')
+    .reduce((total, item) => total + item.hits, 0);
+
+// Calculate Network Hits
+const networkHits = filteredSummaryHitData
+    .filter((item) => item.category === 'network')
+    .reduce((total, item) => total + item.hits, 0);
+
+// Calculate Application Hits
+const applicationHits = filteredSummaryHitData
+    .filter((item) => item.category === 'application')
+    .reduce((total, item) => total + item.hits, 0);
+
 
 
 
@@ -250,7 +310,7 @@ const filteredAlerts = alertsData.filter((alert) => {
                 <StatCard
                     icon={Activity}
                     title="Total Hits"
-                    value="24,580"
+                    value={totalHits}
                 />
 
                 <StatCard
