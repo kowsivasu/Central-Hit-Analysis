@@ -14,6 +14,7 @@ import AlertCard from '../components/AlertCard';
 import RecentActivity from '../components/RecentActivity';
 import { useState } from 'react';
 import DashboardFilters from '../components/DashboardFilters';
+import TrafficTrendChart from '../components/TrafficTrendChart';
 
 const hitData = [
     { name: 'Monday', hits: 120, dateTime: '2026-11-09T10:00:00' },
@@ -146,7 +147,10 @@ function Dashboard() {
     const [endTime, setEndTime] = useState('23:59');
     const [appliedFilter, setAppliedFilter] = useState(null);
 
+// Live Monitoring Status
+const monitoringStatus = 'Active';
 
+const isMonitoringActive = monitoringStatus === 'Active';
 
 const handleApplyFilter = () => {
 
@@ -264,7 +268,7 @@ console.log("Low Alerts:", lowCount);
 
 // Filter summary data using the selected date and time
 const filteredSummaryHitData = summaryHitData.filter((item) => { /* filter() is the js method to select records that satisfy a condition. and item represents one record from the array. */
-    
+
   
     if (!appliedFilter) return true;
 
@@ -274,6 +278,53 @@ const filteredSummaryHitData = summaryHitData.filter((item) => { /* filter() is 
         hitDate >= appliedFilter.start &&
         hitDate <= appliedFilter.end
     );
+});
+
+// Traffic Trends Data
+
+const trendDays = hitData.filter((day) => {
+
+    if (!appliedFilter) {
+        return true;
+    }
+
+    const dayDate = day.dateTime.slice(0, 10);
+
+    return (
+        dayDate >= startDate &&
+        dayDate <= endDate
+    );
+
+});
+
+const trafficTrendData = trendDays.map((day) => {
+
+    const dayDate = day.dateTime.slice(0, 10);
+
+    const dailyHits = filteredSummaryHitData.filter(
+        (item) => item.dateTime.slice(0, 10) === dayDate
+    );
+
+    return {
+        name: day.name,
+
+        web: dailyHits
+            .filter((item) => item.category === 'web')
+            .reduce((total, item) => total + item.hits, 0),
+
+        cybersecurity: dailyHits
+            .filter((item) => item.category === 'cybersecurity')
+            .reduce((total, item) => total + item.hits, 0),
+
+        network: dailyHits
+            .filter((item) => item.category === 'network')
+            .reduce((total, item) => total + item.hits, 0),
+
+        application: dailyHits
+            .filter((item) => item.category === 'application')
+            .reduce((total, item) => total + item.hits, 0)
+    };
+
 });
 
 // Calculate Total Hits
@@ -302,7 +353,15 @@ const applicationHits = filteredSummaryHitData
     .filter((item) => item.category === 'application')
     .reduce((total, item) => total + item.hits, 0);
 
+// Server Online / Offline Status
 
+const onlineServerCount = serverData.filter(
+    (server) => server.status === 'Active'
+).length;
+
+const offlineServerCount = serverData.filter(
+    (server) => server.status === 'Inactive'
+).length;
 
 
     return (
@@ -363,7 +422,7 @@ const applicationHits = filteredSummaryHitData
 </div>
 
 
-{/* Alert Severity Counts */}
+{/* Alert Severity Counts – Critical, High, Medium and Low */}
 <div className="severity-cards">
 
     <StatCard
@@ -393,8 +452,112 @@ const applicationHits = filteredSummaryHitData
 </div>
 
 
+{/* Live Monitoring Status */}
 
+
+
+<div className="monitoring-status">
+
+    <h2>Live Monitoring Status</h2>
+
+    <div className="monitoring-status-card">
+
+        <div className="monitoring-info">
+
+            <Activity size={28} />
+
+            <div>
+                <h3>
+                    {isMonitoringActive
+                        ? 'Monitoring Service Running'
+                        : 'Monitoring Service Stopped'}
+                </h3>
+
+                <p>
+                    Monitoring status:
+                    {' '}
+                    {monitoringStatus}
+                </p>
+            </div>
+
+        </div>
+
+        <span
+            className={
+                isMonitoringActive
+                    ? 'monitoring-badge active'
+                    : 'monitoring-badge inactive'
+            }
+        >
+            {monitoringStatus.toUpperCase()}
+        </span>
+
+    </div>
+
+</div>
             
+  
+  
+  {/* Server Online / Offline Status */}
+
+<div className="server-status">
+
+    <h2>Server Online / Offline Status</h2>
+
+    <div className="server-status-cards">
+
+        <div className="server-status-card">
+
+            <h3>Online Servers</h3>
+
+            <p className="online-count">
+                {onlineServerCount}
+            </p>
+
+        </div>
+
+        <div className="server-status-card">
+
+            <h3>Offline Servers</h3>
+
+            <p className="offline-count">
+                {offlineServerCount}
+            </p>
+
+        </div>
+
+    </div>
+
+    <div className="server-status-list">
+
+        {serverData.map((server) => (
+
+            <div className="server-status-item" key={server.name}>
+
+                <div>
+                    <h4>{server.name}</h4>
+                    <p>{server.ip}</p>
+                </div>
+
+                <span
+                    className={
+                        server.status === 'Active'
+                            ? 'server-badge online'
+                            : 'server-badge offline'
+                    }
+                >
+                    {server.status === 'Active' ? 'ONLINE' : 'OFFLINE'}
+                </span>
+
+            </div>
+
+        ))}
+
+    </div>
+
+</div>
+  
+  
             {/* Hit Analysis Chart */}
 
             <HitChart
@@ -403,6 +566,9 @@ const applicationHits = filteredSummaryHitData
                 dataKey="hits"
                 color="#38BDF8"
                 />
+
+
+                <TrafficTrendChart data={trafficTrendData} />
            {/* Server Information Table */}
 
 
