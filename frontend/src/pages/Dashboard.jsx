@@ -236,12 +236,35 @@ const filteredAlerts = alertsData.filter((alert) => {
 });
 
 
+/* Alert Severity Counts – Critical, High, Medium and Low. */
+// Calculate Critical Alerts
+const criticalCount = filteredAlerts.filter(
+    (alert) => alert.severity === 'critical'
+).length;
 
+// Calculate High Alerts
+const highCount = filteredAlerts.filter(
+    (alert) => alert.severity === 'high'
+).length;
+
+// Calculate Medium Alerts
+const mediumCount = filteredAlerts.filter(
+    (alert) => alert.severity === 'medium'
+).length;
+
+// Calculate Low Alerts
+const lowCount = filteredAlerts.filter(
+    (alert) => alert.severity === 'low'
+).length;
+
+console.log("Critical Alerts:", criticalCount);
+console.log("High Alerts:", highCount);
+console.log("Medium Alerts:", mediumCount);
+console.log("Low Alerts:", lowCount);
 
 // Filter summary data using the selected date and time
 const filteredSummaryHitData = summaryHitData.filter((item) => { /* filter() is the js method to select records that satisfy a condition. and item represents one record from the array. */
-     console.log("item");
-    console.log(item);
+    
   
     if (!appliedFilter) return true;
 
@@ -307,30 +330,70 @@ const applicationHits = filteredSummaryHitData
 
             <div className="summary-cards">
 
-                <StatCard
-                    icon={Activity}
-                    title="Total Hits"
-                    value={totalHits}
-                />
+    <StatCard
+        icon={Activity}
+        title="Total Hits"
+        value={totalHits.toLocaleString()}
+    />
 
-                <StatCard
-                    icon={Globe}
-                    title="Web Server Hits"
-                    value="12,450"
-                />
+    <StatCard
+        icon={Globe}
+        title="Web Server Hits"
+        value={webServerHits.toLocaleString()}
+    />
 
-                <StatCard
-                    icon={ShieldAlert}
-                    title="Security Alerts"
-                    value="128"
-                />
+    <StatCard
+        icon={ShieldAlert}
+        title="Cybersecurity Hits"
+        value={cybersecurityHits.toLocaleString()}
+    />
 
-                <StatCard
-                    icon={Network}
-                    title="Network Hits"
-                    value="8,320"
-                />
-            </div>
+    <StatCard
+        icon={Network}
+        title="Network Hits"
+        value={networkHits.toLocaleString()}
+    />
+
+    <StatCard
+        icon={Activity}
+        title="Application Hits"
+        value={applicationHits.toLocaleString()}
+    />
+
+</div>
+
+
+{/* Alert Severity Counts */}
+<div className="severity-cards">
+
+    <StatCard
+        icon={ShieldAlert}
+        title="Critical Alerts"
+        value={criticalCount}
+    />
+
+    <StatCard
+        icon={ShieldAlert}
+        title="High Alerts"
+        value={highCount}
+    />
+
+    <StatCard
+        icon={ShieldAlert}
+        title="Medium Alerts"
+        value={mediumCount}
+    />
+
+    <StatCard
+        icon={ShieldAlert}
+        title="Low Alerts"
+        value={lowCount}
+    />
+
+</div>
+
+
+
             
             {/* Hit Analysis Chart */}
 
